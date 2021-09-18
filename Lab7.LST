@@ -1,0 +1,508 @@
+SQL> select to_char (sysdate, 'DD-MM-YYYY') data_curenta
+  2  from dual;
+
+DATA_CUREN                                                                      
+----------                                                                      
+15-04-2021                                                                      
+
+SQL> select to_date(15112006, 'DD-MM-YYYY') data_ex
+  2   from dual;
+
+DATA_EX                                                                         
+---------                                                                       
+15-NOV-06                                                                       
+
+SQL> select to_char(-10000, '$999999.99MI') valoare
+  2   from dual;
+
+VALOARE                                                                         
+-----------                                                                     
+ $10000.00-                                                                     
+
+SQL> select to_number('$10000.00-', '$999999.99MI') valoare
+  2   from dual;
+
+   VALOARE                                                                      
+----------                                                                      
+    -10000                                                                      
+
+SQL> select nume, to_char (data_ang, 'dd-mm-yyyy') data_ang
+  2   from angajati
+  3   where to_char (data_ang, 'YYYY') like '1982';
+
+NUME       DATA_ANG                                                             
+---------- ----------                                                           
+SCOTT      09-12-1982                                                           
+MILLER     23-01-1982                                                           
+
+SQL>  select nume, to_char (data_ang, 'dd-mm-yyyy') data_ang
+  2   from angajati
+  3   where to_date(to_char(data_ang, 'YYYY'), 'YYYY') =
+  4     to_date(to_char(1982), 'YYYY');
+
+NUME       DATA_ANG                                                             
+---------- ----------                                                           
+SCOTT      09-12-1982                                                           
+MILLER     23-01-1982                                                           
+
+SQL> select nume, to_char (data_ang, 'dd-mm-yyyy') data_ang
+  2   from angajati
+  3   where to_number(to_char(data_ang, 'YYYY')) = 1982;
+
+NUME       DATA_ANG                                                             
+---------- ----------                                                           
+SCOTT      09-12-1982                                                           
+MILLER     23-01-1982                                                           
+
+SQL> column numar format 99999
+SQL>  select 123.14 numar from dual;
+
+ NUMAR                                                                          
+------                                                                          
+   123                                                                          
+
+SQL>  column numar format 999.99
+SQL>  select 123.14 numar from dual;
+
+  NUMAR                                                                         
+-------                                                                         
+ 123.14                                                                         
+
+SQL> 
+SQL> 
+SQL>  column numar format $999.99
+SQL>  select 123.14 numar from dual;
+
+   NUMAR                                                                        
+--------                                                                        
+ $123.14                                                                        
+
+SQL> 
+SQL>  column numar format 00999.99
+SQL>  select 123.14 numar from dual;
+
+    NUMAR                                                                       
+---------                                                                       
+ 00123.14                                                                       
+
+SQL>  select 0.14 numar from dual;
+
+    NUMAR                                                                       
+---------                                                                       
+ 00000.14                                                                       
+
+SQL> 
+SQL>  column numar format 9990.99
+SQL>  select 123.14 numar from dual;
+
+   NUMAR                                                                        
+--------                                                                        
+  123.14                                                                        
+
+SQL>  select 0.14 numar from dual;
+
+   NUMAR                                                                        
+--------                                                                        
+    0.14                                                                        
+
+SQL> select nume, functie, salariu,
+  2   decode(functie, 'MANAGER', salariu * 1.25,
+  3   'ANALYST', salariu * 1.24,
+  4   salariu/4) prima
+  5   from angajati
+  6   where id_dep = 20
+  7   order by functie;
+
+NUME       FUNCTIE      SALARIU      PRIMA                                      
+---------- --------- ---------- ----------                                      
+SCOTT      ANALYST         3000       3720                                      
+FORD       ANALYST         3000       3720                                      
+ADAMS      CLERK           1100        275                                      
+SMITH      CLERK            800        200                                      
+JONES      MANAGER         2975    3718.75                                      
+
+SQL> select nume, functie, salariu,
+  2   to_char (data_ang, 'YYYY') an_ang,
+  3   decode(sign(data_ang - to_date('1-JAN-1982')),
+  4   -1, salariu * 1.25,
+  5   salariu * 1.1) prima
+  6   from angajati
+  7   where id_dep = 20
+  8   order by functie;
+
+NUME       FUNCTIE      SALARIU AN_A      PRIMA                                 
+---------- --------- ---------- ---- ----------                                 
+SCOTT      ANALYST         3000 1982       3300                                 
+FORD       ANALYST         3000 1981       3750                                 
+ADAMS      CLERK           1100 1983       1210                                 
+SMITH      CLERK            800 1980       1000                                 
+JONES      MANAGER         2975 1981    3718.75                                 
+
+SQL> 
+SQL>  select case lower(locatie)
+  2   when 'new york' then 1
+  3   when 'dallas' then 2
+  4   when 'chicago' then 3
+  5   when 'boston' then 4
+  6   end cod_dep
+  7   from departamente;
+
+   COD_DEP                                                                      
+----------                                                                      
+         1                                                                      
+         2                                                                      
+         3                                                                      
+         4                                                                      
+
+SQL> 
+SQL>  select avg(salariu) salariu from angajati;
+
+   SALARIU                                                                      
+----------                                                                      
+2073.21429                                                                      
+
+SQL>  select avg(all salariu) salariu from angajati;
+
+   SALARIU                                                                      
+----------                                                                      
+2073.21429                                                                      
+
+SQL>  select avg(distinct salariu) salariu from angajati;
+
+   SALARIU                                                                      
+----------                                                                      
+2064.58333                                                                      
+
+SQL> 
+SQL>  select id_dep, avg(salariu) from angajati
+  2   group by id_dep
+  3   order by 1;
+
+    ID_DEP AVG(SALARIU)                                                         
+---------- ------------                                                         
+        10   2916.66667                                                         
+        20         2175                                                         
+        30   1566.66667                                                         
+
+SQL> 
+SQL>  select id_dep, count(*) nr_ang,
+  2   count(salariu) count,
+  3   count(all salariu) count_all,
+  4   count(distinct salariu) count_distinct
+  5   from angajati
+  6   group by id_dep
+  7   order by 1;
+
+    ID_DEP     NR_ANG      COUNT  COUNT_ALL COUNT_DISTINCT                      
+---------- ---------- ---------- ---------- --------------                      
+        10          3          3          3              3                      
+        20          5          5          5              4                      
+        30          6          6          6              5                      
+
+SQL> 
+SQL>  select id_dep,
+  2   count (functie) count,
+  3   count(distinct functie) count_distinct
+  4   from angajati
+  5   group by id_dep
+  6   having count (distinct functie) >= 2
+  7   order by 1;
+
+    ID_DEP      COUNT COUNT_DISTINCT                                            
+---------- ---------- --------------                                            
+        10          3              3                                            
+        20          5              3                                            
+        30          6              3                                            
+
+SQL> 
+SQL>  select d.den_dep,
+  2   min(a.salariu) sal_min,
+  3   min(distinct a.salariu) sal_min_d,
+  4   max(a.salariu) sal_max,
+  5   max(distinct a.salariu) sal_max_d,
+  6   sum(a.salariu) sal_sum,
+  7   sum(distinct a.salariu) sal_sum_d
+  8   from angajati a natural join departamente d
+  9   group by d.den_dep
+ 10   order by d.den_dep;
+
+DEN_DEP           SAL_MIN  SAL_MIN_D    SAL_MAX  SAL_MAX_D    SAL_SUM  SAL_SUM_D
+-------------- ---------- ---------- ---------- ---------- ---------- ----------
+ACCOUNTING           1300       1300       5000       5000       8750       8750
+RESEARCH              800        800       3000       3000      10875       7875
+SALES                 950        950       2850       2850       9400       8150
+
+SQL> 
+SQL>  select id_dep,
+  2   variance(salariu) sal_varstd,
+  3   variance(distinct salariu) sal_varstd_d,
+  4   stddev(salariu) sal_devstd,
+  5   stddev(distinct salariu) sal_devstd_d,
+  6   stddev(comision) com_devstd
+  7   from angajati
+  8   group by id_dep
+  9   order by 1;
+
+    ID_DEP SAL_VARSTD SAL_VARSTD_D SAL_DEVSTD SAL_DEVSTD_D COM_DEVSTD           
+---------- ---------- ------------ ---------- ------------ ----------           
+        10 3585833.33   3585833.33 1893.62967   1893.62967                      
+        20    1261875   1398906.25  1123.3321   1182.75367                      
+        30 446666.667       528250 668.331255    726.80809 602.771377           
+
+SQL> select * from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM      
+---------- ---------- --------- ---------- --------- ---------- ----------      
+    DEPTNO                                                                      
+----------                                                                      
+      7369 SMITH      CLERK           7902 17-DEC-80        800                 
+        20                                                                      
+                                                                                
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300      
+        30                                                                      
+                                                                                
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500      
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM      
+---------- ---------- --------- ---------- --------- ---------- ----------      
+    DEPTNO                                                                      
+----------                                                                      
+      7566 JONES      MANAGER         7839 02-APR-81       2975                 
+        20                                                                      
+                                                                                
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400      
+        30                                                                      
+                                                                                
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                 
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM      
+---------- ---------- --------- ---------- --------- ---------- ----------      
+    DEPTNO                                                                      
+----------                                                                      
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                 
+        10                                                                      
+                                                                                
+      7788 SCOTT      ANALYST         7566 09-DEC-82       3000                 
+        20                                                                      
+                                                                                
+      7839 KING       PRESIDENT            17-NOV-81       5000                 
+        10                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM      
+---------- ---------- --------- ---------- --------- ---------- ----------      
+    DEPTNO                                                                      
+----------                                                                      
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0      
+        30                                                                      
+                                                                                
+      7876 ADAMS      CLERK           7788 12-JAN-83       1100                 
+        20                                                                      
+                                                                                
+      7900 JAMES      CLERK           7698 03-DEC-81        950                 
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM      
+---------- ---------- --------- ---------- --------- ---------- ----------      
+    DEPTNO                                                                      
+----------                                                                      
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                 
+        20                                                                      
+                                                                                
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                 
+        10                                                                      
+                                                                                
+
+14 rows selected.
+
+SQL> select
+  2  e.job functie,
+  3  case count(b.job)
+  4  when 0 then 'NU'
+  5  else 'DA'
+  6  end exista_sef,
+  7  count(e.job) nr_ang,
+  8  count(distinct g.grade) nr_grile_sal_d,
+  9  min(e.sal) sal_min,
+ 10  round(avg(e.sal), 2) sal_mediu,
+ 11  max(e.sal) sal_max
+ 12  from
+ 13  emp e
+ 14  join emp b
+ 15  on e.mgr = b.empno(+)
+ 16  join salgrade g
+ 17  on e.sal between g.losal and g.hisal
+ 18  group by
+ 19  e.job;
+
+FUNCTIE   EX     NR_ANG NR_GRILE_SAL_D    SAL_MIN  SAL_MEDIU    SAL_MAX         
+--------- -- ---------- -------------- ---------- ---------- ----------         
+ANALYST   DA          2              1       3000       3000       3000         
+SALESMAN  DA          4              2       1250       1400       1600         
+CLERK     DA          4              2        800     1037.5       1300         
+MANAGER   DA          3              1       2450    2758.33       2975         
+PRESIDENT NU          1              1       5000       5000       5000         
+
+SQL> SELECTa1.id_ang,a1.nume,count(a2.id_ang) as "Subalterni",d.den_dep,min(a2.salariu) as "Salariu Minim",avg(a2.salariu) as "Salariu Mediu",max(a2.salariu) as "Salariu Maxim"FROMangajati a1INNER JOIN angajati a2 ON a1.id_ang = a2.id_sefINNER JOIN departamente d ON a1.id_dep = d.id_depGROUP BY a1.id_ang, a1.nume, d.den_dep;
+SP2-0734: unknown command beginning "SELECTa1.i..." - rest of line ignored.
+SQL> SELECT
+  2  a1.id_ang,
+  3  a1.nume,
+  4  count(a2.id_ang) as "Subalterni",
+  5  d.den_dep,
+  6  min(a2.salariu) as "Salariu Minim",
+  7  avg(a2.salariu) as "Salariu Mediu",
+  8  max(a2.salariu) as "Salariu Maxim"
+  9  FROM
+ 10  angajati a1
+ 11  INNER JOIN angajati a2 ON a1.id_ang = a2.id_sef
+ 12  INNER JOIN departamente d ON a1.id_dep = d.id_dep
+ 13  GROUP BY a1.id_ang, a1.nume, d.den_dep;
+
+    ID_ANG NUME       Subalterni DEN_DEP        Salariu Minim Salariu Mediu     
+---------- ---------- ---------- -------------- ------------- -------------     
+Salariu Maxim                                                                   
+-------------                                                                   
+      7782 CLARK               1 ACCOUNTING              1300          1300     
+         1300                                                                   
+                                                                                
+      7839 KING                3 ACCOUNTING              2450    2758.33333     
+         2975                                                                   
+                                                                                
+      7566 JONES               2 RESEARCH                3000          3000     
+         3000                                                                   
+                                                                                
+
+    ID_ANG NUME       Subalterni DEN_DEP        Salariu Minim Salariu Mediu     
+---------- ---------- ---------- -------------- ------------- -------------     
+Salariu Maxim                                                                   
+-------------                                                                   
+      7788 SCOTT               1 RESEARCH                1100          1100     
+         1100                                                                   
+                                                                                
+      7902 FORD                1 RESEARCH                 800           800     
+          800                                                                   
+                                                                                
+      7698 BLAKE               5 SALES                    950          1310     
+         1600                                                                   
+                                                                                
+
+6 rows selected.
+
+SQL> SELECT
+  2  INITCAP(a1.nume) as "Nume angajat",
+  3  LOWER(d1.den_dep) as "Nume Departament",
+  4  to_char(a1.data_ang, 'mm-YYYY') as "Data angajare",
+  5  case g.grad
+  6  when 2 then a1.salariu * sqrt(0.15 * log(2, MONTHS_BETWEEN(SYSDATE, a1.data_ang)))
+  7  when 4 then a1.salariu * sqrt(0.15 * log(3, MONTHS_BETWEEN(SYSDATE, a1.data_ang)))
+  8  else 0
+  9  end as "Prima",
+ 10  g.grad,
+ 11  INITCAP(a2.nume) as "Nume Sef",
+ 12  LOWER(d2.den_dep) as "Nume Departament Sef"
+ 13  FROM
+ 14  angajati a1
+ 15  INNER JOIN departamente d1 ON a1.id_dep = d1.id_dep
+ 16  INNER JOIN grila_salariu g ON a1.salariu BETWEEN g.nivel_inf AND g.nivel_sup
+ 17  LEFT OUTER JOIN angajati a2 ON a1.id_sef = a2.id_ang
+ 18  LEFT OUTER JOIN departamente d2 ON a2.id_dep = d2.id_dep
+ 19  ORDER BY a1.nume;
+
+Nume angaj Nume Departame Data an      Prima       GRAD Nume Sef                
+---------- -------------- ------- ---------- ---------- ----------              
+Nume Departame                                                                  
+--------------                                                                  
+Adams      research       01-1983          0          1 Scott                   
+research                                                                        
+                                                                                
+Allen      sales          02-1981          0          3 Blake                   
+sales                                                                           
+                                                                                
+Blake      sales          05-1981 2616.40744          4 King                    
+accounting                                                                      
+                                                                                
+
+Nume angaj Nume Departame Data an      Prima       GRAD Nume Sef                
+---------- -------------- ------- ---------- ---------- ----------              
+Nume Departame                                                                  
+--------------                                                                  
+Clark      accounting     06-1981 2248.71364          4 King                    
+accounting                                                                      
+                                                                                
+Ford       research       12-1981 2750.79967          4 Jones                   
+research                                                                        
+                                                                                
+James      sales          12-1981          0          1 Blake                   
+sales                                                                           
+                                                                                
+
+Nume angaj Nume Departame Data an      Prima       GRAD Nume Sef                
+---------- -------------- ------- ---------- ---------- ----------              
+Nume Departame                                                                  
+--------------                                                                  
+Jones      research       04-1981 2731.60818          4 King                    
+accounting                                                                      
+                                                                                
+King       accounting     11-1981          0          5                         
+                                                                                
+                                                                                
+Martin     sales          09-1981 1443.51239          2 Blake                   
+sales                                                                           
+                                                                                
+
+Nume angaj Nume Departame Data an      Prima       GRAD Nume Sef                
+---------- -------------- ------- ---------- ---------- ----------              
+Nume Departame                                                                  
+--------------                                                                  
+Miller     accounting     01-1982 1500.26336          2 Clark                   
+accounting                                                                      
+                                                                                
+Scott      research       12-1982 2744.95256          4 Jones                   
+research                                                                        
+                                                                                
+Smith      research       12-1980          0          1 Ford                    
+research                                                                        
+                                                                                
+
+Nume angaj Nume Departame Data an      Prima       GRAD Nume Sef                
+---------- -------------- ------- ---------- ---------- ----------              
+Nume Departame                                                                  
+--------------                                                                  
+Turner     sales          09-1981          0          3 Blake                   
+sales                                                                           
+                                                                                
+Ward       sales          02-1981 1445.27321          2 Blake                   
+sales                                                                           
+                                                                                
+
+14 rows selected.
+
+SQL> lariu) as "Salariu Minim",
+SP2-0734: unknown command beginning "lariu) as ..." - rest of line ignored.
+SQL>   7  avg(a2.salariu) as "Salariu Mediu",
+SQL>   8  max(a2.salariu) as "Salariu Maxim"
+SQL>   9  FROM
+SQL>  10  angajati a1
+SQL>  11  INNER JOIN angajati a2 ON a1.
+SQL> 
+SQL> select
+  2  UPPER(a.nume) Nume,
+  3  extract(DAY from a.data_ang) "Ziua-Angajarii",
+  4  LOWER(d.den_dep) "Nume-Dep",
+  5  SUBSTR(a2.nume, 1, 1) "Initiala-sef"
+  6  
+SQL> from angajati a, departamente d, angajati a2
+SP2-0734: unknown command beginning "from angaj..." - rest of line ignored.
+SQL> where a.id_dep = d.id_dep and a.id_sef = a2.id_ang and LENGTH(a.nume) = 4;
+SP2-0734: unknown command beginning "where a.id..." - rest of line ignored.
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> spool off;

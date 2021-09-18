@@ -1,0 +1,62 @@
+SQL> col C format a20 heading 'Nume angajat' justify center
+SQL> col D format 99,999.00 heading 'Salariu angajat' justify center
+SQL> col H noprint new_value E
+SQL>  ttitle center 'STRUCTURA ORGANIZATORICA' skip 1 left 'Pag:' format 09 sql.pno right 'Data: ' E
+SQL>  btitle center 'DIRECTOR RESURSE UMANE'
+SQL>  break on A noduplicates on report skip 1
+SQL>  comp sum label 'Total/Dept' of D on A
+SQL>  comp sum label 'Total' of D on report
+SQL>  define data = "to_char(sysdate, 'dd/mm/yyyy')"
+SQL>   select d.den_dep A, s.nume B, a.nume C, a.salariu D, &data H
+  2    from angajati a
+  3    inner join departamente d on a.id_dep = d.id_dep
+  4    inner join angajati s on a.id_sef = s.id_ang
+  5    order by a.id_dep;
+old   1:   select d.den_dep A, s.nume B, a.nume C, a.salariu D, &data H
+new   1:   select d.den_dep A, s.nume B, a.nume C, a.salariu D, to_char(sysdate, 'dd/mm/yyyy') H
+
+                            STRUCTURA ORGANIZATORICA                            
+Pag: 01                                                         Data: 20/05/2021
+A              B              Nume angajat     Salariu angajat                  
+-------------- ---------- -------------------- ---------------                  
+ACCOUNTING     KING       CLARK                       2,450.00                  
+               CLARK      MILLER                      1,300.00                  
+**************                                 ---------------                  
+Total/Dept                                            3,750.00                  
+RESEARCH       JONES      SCOTT                       3,000.00                  
+               KING       JONES                       2,975.00                  
+               SCOTT      ADAMS                       1,100.00                  
+               JONES      FORD                        3,000.00                  
+                             DIRECTOR RESURSE UMANE                             
+
+                            STRUCTURA ORGANIZATORICA                            
+Pag: 02                                                         Data: 20/05/2021
+A              B              Nume angajat     Salariu angajat                  
+-------------- ---------- -------------------- ---------------                  
+RESEARCH       FORD       SMITH                         800.00                  
+**************                                 ---------------                  
+Total/Dept                                           10,875.00                  
+SALES          KING       BLAKE                       2,850.00                  
+               BLAKE      TURNER                      1,500.00                  
+               BLAKE      MARTIN                      1,250.00                  
+               BLAKE      ALLEN                       1,600.00                  
+               BLAKE      JAMES                         950.00                  
+                             DIRECTOR RESURSE UMANE                             
+
+                            STRUCTURA ORGANIZATORICA                            
+Pag: 03                                                         Data: 20/05/2021
+A              B              Nume angajat     Salariu angajat                  
+-------------- ---------- -------------------- ---------------                  
+SALES          BLAKE      WARD                        1,250.00                  
+**************                                 ---------------                  
+Total/Dept                                            9,400.00                  
+                                               ---------------                  
+Total                                                24,025.00                  
+                                                                                
+
+
+                             DIRECTOR RESURSE UMANE                             
+
+13 rows selected.
+
+SQL> spool off;

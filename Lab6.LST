@@ -1,0 +1,473 @@
+SQL> DROP TABLE EMP;
+
+Table dropped.
+
+SQL> DROP TABLE BONUS;
+
+Table dropped.
+
+SQL> DROP TABLE DEPT;
+
+Table dropped.
+
+SQL> DROP TABLE SALGRADE;
+
+Table dropped.
+
+SQL> DROP TABLE ANGAJATI;
+
+Table dropped.
+
+SQL> DROP TABLE DEPARTAMENTE;
+
+Table dropped.
+
+SQL> DROP TABLE GRILA_SALARIU;
+
+Table dropped.
+
+SQL> 
+SQL> CREATE TABLE BONUS
+  2          (ENAME VARCHAR2(10),
+  3           JOB   VARCHAR2(9),
+  4           SAL   NUMBER,
+  5           COMM  NUMBER);
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE EMP
+  2         (EMPNO NUMBER(4) NOT NULL,
+  3          ENAME VARCHAR2(10),
+  4          JOB VARCHAR2(9),
+  5          MGR NUMBER(4),
+  6          HIREDATE DATE,
+  7          SAL NUMBER(7, 2),
+  8          COMM NUMBER(7, 2),
+  9          DEPTNO NUMBER(2));
+
+Table created.
+
+SQL> 
+SQL> INSERT INTO EMP VALUES
+  2          (7369, 'SMITH',  'CLERK',     7902,
+  3          TO_DATE('17-12-1980', 'DD-MM-YYYY'),  800, NULL, 20);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7499, 'ALLEN',  'SALESMAN',  7698,
+  3          TO_DATE('20-02-1981', 'DD-MM-YYYY'), 1600,  300, 30);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7521, 'WARD',   'SALESMAN',  7698,
+  3          TO_DATE('22-02-1981', 'DD-MM-YYYY'), 1250,  500, 30);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7566, 'JONES',  'MANAGER',   7839,
+  3          TO_DATE('2-04-1981', 'DD-MM-YYYY'),  2975, NULL, 20);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7654, 'MARTIN', 'SALESMAN',  7698,
+  3          TO_DATE('28-09-1981', 'DD-MM-YYYY'), 1250, 1400, 30);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7698, 'BLAKE',  'MANAGER',   7839,
+  3          TO_DATE('01-05-1981', 'DD-MM-YYYY'),  2850, NULL, 30);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7782, 'CLARK',  'MANAGER',   7839,
+  3          TO_DATE('09-06-1981', 'DD-MM-YYYY'),  2450, NULL, 10);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7788, 'SCOTT',  'ANALYST',   7566,
+  3          TO_DATE('09-12-1982', 'DD-MM-YYYY'), 3000, NULL, 20);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7839, 'KING',   'PRESIDENT', NULL,
+  3          TO_DATE('17-11-1981', 'DD-MM-YYYY'), 5000, NULL, 10);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7844, 'TURNER', 'SALESMAN',  7698,
+  3          TO_DATE('8-09-1981', 'DD-MM-YYYY'),  1500, 0, 30);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7876, 'ADAMS',  'CLERK',     7788,
+  3          TO_DATE('12-01-1983', 'DD-MM-YYYY'), 1100, NULL, 20);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7900, 'JAMES',  'CLERK',     7698,
+  3          TO_DATE('3-12-1981', 'DD-MM-YYYY'),   950, NULL, 30);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7902, 'FORD',   'ANALYST',   7566,
+  3          TO_DATE('3-12-1981', 'DD-MM-YYYY'),  3000, NULL, 20);
+
+1 row created.
+
+SQL> INSERT INTO EMP VALUES
+  2          (7934, 'MILLER', 'CLERK',     7782,
+  3          TO_DATE('23-01-1982', 'DD-MM-YYYY'), 1300, NULL, 10);
+
+1 row created.
+
+SQL> 
+SQL> CREATE TABLE DEPT
+  2         (DEPTNO NUMBER(2),
+  3          DNAME VARCHAR2(14),
+  4          LOC VARCHAR2(13) );
+
+Table created.
+
+SQL> 
+SQL> INSERT INTO DEPT VALUES (10, 'ACCOUNTING', 'NEW YORK');
+
+1 row created.
+
+SQL> INSERT INTO DEPT VALUES (20, 'RESEARCH',   'DALLAS');
+
+1 row created.
+
+SQL> INSERT INTO DEPT VALUES (30, 'SALES',      'CHICAGO');
+
+1 row created.
+
+SQL> INSERT INTO DEPT VALUES (40, 'OPERATIONS', 'BOSTON');
+
+1 row created.
+
+SQL> 
+SQL> CREATE TABLE SALGRADE
+  2          (GRADE NUMBER,
+  3           LOSAL NUMBER,
+  4           HISAL NUMBER);
+
+Table created.
+
+SQL> 
+SQL> INSERT INTO SALGRADE VALUES (1,  700, 1200);
+
+1 row created.
+
+SQL> INSERT INTO SALGRADE VALUES (2, 1201, 1400);
+
+1 row created.
+
+SQL> INSERT INTO SALGRADE VALUES (3, 1401, 2000);
+
+1 row created.
+
+SQL> INSERT INTO SALGRADE VALUES (4, 2001, 3000);
+
+1 row created.
+
+SQL> INSERT INTO SALGRADE VALUES (5, 3001, 9999);
+
+1 row created.
+
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> ALTER TABLE DEPT ADD CONSTRAINT  PK_DEPTNO  PRIMARY KEY(DEPTNO);
+
+Table altered.
+
+SQL> ALTER TABLE SALGRADE ADD CONSTRAINT PK_GRADe PRIMARY KEY(GRADE);
+
+Table altered.
+
+SQL> ALTER TABLE EMP ADD CONSTRAINT PK_EMP  PRIMARY KEY(EMPNO);
+
+Table altered.
+
+SQL> 
+SQL> ALTER TABLE EMP ADD CONSTRAINT FK_EMP_DEPT  FOREIGN KEY(DEPTNO) REFERENCES DEPT(DEPTNO);
+
+Table altered.
+
+SQL> ALTER TABLE EMP ADD CONSTRAINT FK_EMP_EMP  FOREIGN KEY(MGR) REFERENCES EMP(EMPNO);
+
+Table altered.
+
+SQL> 
+SQL> 
+SQL> CREATE TABLE ANGAJATI AS
+  2  SELECT EMPNO ID_ANG, ENAME NUME, JOB FUNCTIE, MGR ID_SEF, HIREDATE DATA_ANG, SAL SALARIU, COMM COMISION, DEPTNO ID_DEP
+  3  FROM EMP;
+
+Table created.
+
+SQL> CREATE TABLE DEPARTAMENTE AS
+  2  SELECT DEPTNO ID_DEP, DNAME DEN_DEP, LOC LOCATIE
+  3  FROM DEPT;
+
+Table created.
+
+SQL> CREATE TABLE GRILA_SALARIU AS
+  2  SELECT GRADE GRAD, LOSAL NIVEL_INF, HISAL NIVEL_SUP
+  3  FROM SALGRADE;
+
+Table created.
+
+SQL> 
+SQL> ALTER TABLE DEPARTAMENTE ADD CONSTRAINT  PK_ID_DEP  PRIMARY KEY(ID_DEP);
+
+Table altered.
+
+SQL> ALTER TABLE GRILA_SALARIU ADD CONSTRAINT PK_GRAD PRIMARY KEY(GRAD);
+
+Table altered.
+
+SQL> ALTER TABLE ANGAJATI ADD CONSTRAINT PK_ID_ANG  PRIMARY KEY(ID_ANG);
+
+Table altered.
+
+SQL> 
+SQL> ALTER TABLE ANGAJATI ADD CONSTRAINT FK_ANG_DEPT  FOREIGN KEY(ID_DEP) REFERENCES DEPARTAMENTE(ID_DEP);
+
+Table altered.
+
+SQL> ALTER TABLE ANGAJATI ADD CONSTRAINT FK_ANG_ANG  FOREIGN KEY(ID_SEF) REFERENCES ANGAJATI(ID_ANG);
+
+Table altered.
+
+SQL> 
+SQL> commit;
+
+Commit complete.
+
+SQL> select concat(concat(nume, ' este '), functie) ANG_FUNC
+  2  from angajati
+  3  where id_ang = 7839;
+
+ANG_FUNC                                                                        
+-------------------------                                                       
+KING este PRESIDENT                                                             
+
+SQL> select initcap(nume) ex_initcap
+  2  from angajati
+  3  where id_ang = 7839;
+
+EX_INITCAP                                                                      
+----------                                                                      
+King                                                                            
+
+SQL> select replace('JACK si JUE', 'J', 'BL') EX_REPLACE
+  2  from dual;
+
+EX_REPLACE                                                                      
+-------------                                                                   
+BLACK si BLUE                                                                   
+
+SQL> select rpad(nume, 10, '*') EX_RPAD
+  2  from angajati
+  3  where id_dep = 10;
+
+EX_RPAD                                                                         
+----------------------------------------                                        
+CLARK*****                                                                      
+KING******                                                                      
+MILLER****                                                                      
+
+SQL> select lpad(nume, 10, '*') EX_LPAD
+  2  from angajati
+  3  where id_dep = 10;
+
+EX_LPAD                                                                         
+----------------------------------------                                        
+*****CLARK                                                                      
+******KING                                                                      
+****MILLER                                                                      
+
+SQL> select rtrim('Popescu', 'scu') from dual;
+
+RTRI                                                                            
+----                                                                            
+Pope                                                                            
+
+SQL> select substr('Popescu', 2, 3) from dual;
+
+SUB                                                                             
+---                                                                             
+ope                                                                             
+
+SQL> 
+SQL> select instr('Protopopescu', 'op', 3, 2) from dual;
+
+INSTR('PROTOPOPESCU','OP',3,2)                                                  
+------------------------------                                                  
+                             7                                                  
+
+SQL> select nume, data_ang, ADD_MONTHS(data_ang, 3) data_mod
+  2  from angajati
+  3  where id_dep = 10;
+
+NUME       DATA_ANG  DATA_MOD                                                   
+---------- --------- ---------                                                  
+CLARK      09-JUN-81 09-SEP-81                                                  
+KING       17-NOV-81 17-FEB-82                                                  
+MILLER     23-JAN-82 23-APR-82                                                  
+
+SQL> 
+SQL> select nume, data_ang, LAST_DAY(data_ang) ultima_zi
+  2  from angajati
+  3  where id_dep = 10;
+
+NUME       DATA_ANG  ULTIMA_ZI                                                  
+---------- --------- ---------                                                  
+CLARK      09-JUN-81 30-JUN-81                                                  
+KING       17-NOV-81 30-NOV-81                                                  
+MILLER     23-JAN-82 31-JAN-82                                                  
+
+SQL> 
+SQL> select NEXT_DAY('31-MAR-2014', 'MONDAY') urmatoarea_luni
+  2  from dual;
+
+URMATOARE                                                                       
+---------                                                                       
+07-APR-14                                                                       
+
+SQL> 
+SQL> select nume, data_ang,
+  2  MONTHS_BETWEEN('09-JUN-1982', data_ang) luni_vechime1,
+  3  MONTHS_BETWEEN(data_ang, '09-JUN-1982') luni_vechime2
+  4  from angajati
+  5  where id_dep = 10;
+
+NUME       DATA_ANG  LUNI_VECHIME1 LUNI_VECHIME2                                
+---------- --------- ------------- -------------                                
+CLARK      09-JUN-81            12           -12                                
+KING       17-NOV-81    6.74193548    -6.7419355                                
+MILLER     23-JAN-82     4.5483871    -4.5483871                                
+
+SQL> 
+SQL> select
+  2  data_ang,
+  3  round(data_ang, 'YEAR') rot_an
+  4  from angajati
+  5  where id_ang = 7369;
+
+DATA_ANG  ROT_AN                                                                
+--------- ---------                                                             
+17-DEC-80 01-JAN-81                                                             
+
+SQL> select
+  2  data_ang,
+  3  round(data_ang, 'MONTH') rot_luna
+  4  from angajati
+  5  where id_ang = 7369;
+
+DATA_ANG  ROT_LUNA                                                              
+--------- ---------                                                             
+17-DEC-80 01-JAN-81                                                             
+
+SQL> 
+SQL> select
+  2  data_ang,
+  3  trunc(data_ang, 'YEAR') trun_an
+  4  from angajati
+  5  where id_ang = 7369;
+
+DATA_ANG  TRUN_AN                                                               
+--------- ---------                                                             
+17-DEC-80 01-JAN-80                                                             
+
+SQL> 
+SQL> select
+  2  data_ang,
+  3  trunc(data_ang, 'MONTH') trun_luna
+  4  from angajati
+  5  where id_ang = 7369;
+
+DATA_ANG  TRUN_LUNA                                                             
+--------- ---------                                                             
+17-DEC-80 01-DEC-80                                                             
+
+SQL> 
+SQL> select sysdate from dual;
+
+SYSDATE                                                                         
+---------                                                                       
+09-APR-21                                                                       
+
+SQL> 
+SQL> select extract(day from sysdate) from dual;
+
+EXTRACT(DAYFROMSYSDATE)                                                         
+-----------------------                                                         
+                      9                                                         
+
+SQL> select extract(month from sysdate) from dual;
+
+EXTRACT(MONTHFROMSYSDATE)                                                       
+-------------------------                                                       
+                        4                                                       
+
+SQL> select extract(year from sysdate) from dual;
+
+EXTRACT(YEARFROMSYSDATE)                                                        
+------------------------                                                        
+                    2021                                                        
+
+SQL> select
+  2  INITCAP(nume) ex_initcap,
+  3  data_ang,
+  4  NLS_LOWER(departament),
+  5  SUBSTR(nume, 1, 1)
+  6  
+SQL> from angajati
+SP2-0734: unknown command beginning "from angaj..." - rest of line ignored.
+SQL> select
+  2  INITCAP(nume) ex_initcap,
+  3  data_ang,
+  4  NLS_LOWER(departament),
+  5  SUBSTR(nume, 1, 1)
+  6  from angajati
+  7  where LENGTH(nume) = 4;
+NLS_LOWER(departament),
+          *
+ERROR at line 4:
+ORA-00904: "DEPARTAMENT": invalid identifier 
+
+
+SQL> where LENG
+SP2-0042: unknown command "where LENG" - rest of line ignored.
+SQL> select
+  2  INITCAP(nume) ex_initcap,
+  3  data_ang,
+  4  NLS_LOWER(dept),
+  5  SUBSTR(nume, 1, 1)
+  6  from angajati
+  7  where LENGTH(nume) = 4;
+NLS_LOWER(dept),
+          *
+ERROR at line 4:
+ORA-00904: "DEPT": invalid identifier 
+
+
+SQL> spool off

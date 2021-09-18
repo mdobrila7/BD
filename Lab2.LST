@@ -1,0 +1,610 @@
+SQL> drop table departamente
+  2  
+SQL> drop table departamente;
+
+Table dropped.
+
+SQL> drop table grila_salariu
+  2  
+SQL> drop table grila_salariu;
+
+Table dropped.
+
+SQL> drop table angajati;
+
+Table dropped.
+
+SQL> CREATE TABLE departamente
+  2  (
+  3  id_departament NUMBER(2) NOT NULL,
+  4  denumire_departament VARCHAR2(30),
+  5  telefon VARCHAR2(10),
+  6  CONSTRAINT pk_departamente PRIMARY_KEY (id_departament),
+  7  CONSTRAINT uq_denumire UNIQUE (denumire_departament)
+  8  );
+CONSTRAINT pk_departamente PRIMARY_KEY (id_departament),
+                                       *
+ERROR at line 6:
+ORA-00902: invalid datatype 
+
+
+SQL> CREATE TABLE departamente
+  2  (
+  3  id_departament NUMBER(2) NOT NULL,
+  4  denumire_departament VARCHAR2(30),
+  5  telefon VARCHAR2(10),
+  6  CONSTRAINT pk_departamente PRIMARY KEY (id_departament),
+  7  CONSTRAINT uq_denumire UNIQUE (denumire_departament)
+  8  );
+
+Table created.
+
+SQL> CREATE TABLE grila_salariu
+  2  (
+  3  grad number(2),
+  4  nive_inferior NUMBER,
+  5  nive_inferior NUMBER,
+  6  
+SQL> 
+SQL> CREATE TABLE grila_salariu
+  2  (
+  3  grad number(2),
+  4  nivel_inferior NUMBER
+  5  nivel_superior NUMBER\
+  6  
+SQL> 
+SQL> 
+SQL> CREATE TABLE grila_salariu
+  2  (
+  3  grad number(2),
+  4  nive_inferior NUMBER,
+  5  
+SQL> 
+SQL> 
+SQL> CREATE TABLE grila_salariu
+  2  (
+  3  grad number(2),
+  4  nivel_inferior NUMBER,
+  5  nivel_superior NUMEBR,
+  6  CONSTRAINT pk_grila PRIMARY KEY (grad)
+  7  );
+nivel_superior NUMEBR,
+               *
+ERROR at line 5:
+ORA-00902: invalid datatype 
+
+
+SQL> CREATE TABLE grila_salariu
+  2  (
+  3  grad number(2),
+  4  nivel_inferior NUMBER,
+  5  nivel_superior NUMBER,
+  6  CONSTRAINT pk_grila PRIMARY KEY (grad)
+  7  );
+
+Table created.
+
+SQL> CREATE TABLE ANGAJATI
+  2  (
+  3  id_angajat NUMBER(4) NOT NULL,
+  4  nume VARCHAR2(30),
+  5  prenume VARCHAR2(30),
+  6  functie VARCHAR2(20),
+  7  id_sef NUMBER(4),
+  8  data_angajarii DATE DEFAULT SYSDATE,
+  9  salariu NUMBER(7,2) DEFAULT 2000,
+ 10  comision NUMBER(7,2),
+ 11  id_departament NUMBER,
+ 12  CONSTRAINT pk_angajati PRIMARY KEY (id_angajat),
+ 13  CONSTRAINT fk_ang__dep FOREIGN KEY (id_departament)
+ 14    REFERENCES departamente(id_departament),
+ 15  CONSTRAINT fk_ang__ang FOREIGN KEY (id_sef)
+ 16    REFERENCES angajati(id_angajat),
+ 17  CONSTRAINT uq_nume UNIQUE (nume, prenume)
+ 18  );
+
+Table created.
+
+SQL> INSERT INTO grila_salariu VALUES(1, 1, 1000);
+
+1 row created.
+
+SQL> INSERT INTO grila_salariu VALUES(1, 1001, 2000);
+INSERT INTO grila_salariu VALUES(1, 1001, 2000)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_GRILA) violated 
+
+
+SQL> INSERT INTO grila_salariu VALUES(2, 1001, 2000);
+
+1 row created.
+
+SQL> INSERT INTO departamente VALUES(10, 'Proiectare Software', '3212121');
+
+1 row created.
+
+SQL> INSERT INTO departamente VALUES(20, 'Asigurarea Calitatii', '3212122');
+
+1 row created.
+
+SQL> INSERT INTO departamente VALUES(10, 'Resurse Umane', '3212123');
+INSERT INTO departamente VALUES(10, 'Resurse Umane', '3212123')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_DEPARTAMENTE) violated 
+
+
+SQL> INSERT INTO departamente VALUES(11, 'Resurse Umane', '3212123');
+
+1 row created.
+
+SQL> INSERT INTO departamente VALUES(30, 'Proiectare Software', '3212124');
+INSERT INTO departamente VALUES(30, 'Proiectare Software', '3212124')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.UQ_DENUMIRE) violated 
+
+
+SQL> INSERT INTO departamente VALUES(30, 'Proiectare Software', '3212125');
+INSERT INTO departamente VALUES(30, 'Proiectare Software', '3212125')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.UQ_DENUMIRE) violated 
+
+
+SQL> INSERT INTO departamente VALUES(30, 'Proiectare Software', '3212125');
+INSERT INTO departamente VALUES(30, 'Proiectare Software', '3212125')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.UQ_DENUMIRE) violated 
+
+
+SQL> 
+SQL> INSERT INTO departamente VALUES(30, 'Proiectare Software2', '3212124');
+
+1 row created.
+
+SQL> INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, `Ionescu', `Ion', 'Director');
+INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, `Ionescu', `Ion', 'Director')
+                                                                *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, `Ionescu', `Ion', 'Director');
+INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, `Ionescu', `Ion', 'Director')
+                                                                *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, `Ionescu', `Ion', 'Director');
+INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, `Ionescu', `Ion', 'Director')
+                                                                *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie)
+  2  VALUES(1001, `Ionescu', `Ion', 'Director');
+VALUES(1001, `Ionescu', `Ion', 'Director')
+*
+ERROR at line 2:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie)
+  2    VALUES(1001, `Ionescu', `Ion', 'Director');
+  VALUES(1001, `Ionescu', `Ion', 'Director')
+  *
+ERROR at line 2:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, 'Ionescu', 'Ion', 'Director');
+INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, 'Ionescu', 'Ion', 'Director')
+                                                                *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, 'Ionescu', 'Ion', 'Director');
+INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, 'Ionescu', 'Ion', 'Director')
+                                                                *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, 'Ionescu', 'Ion', 'Director');
+INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, 'Ionescu', 'Ion', 'Director')
+                                                                *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie)
+  2    VALUES(1001, 'Ionescu', 'Ion', 'Director');
+  VALUES(1001, 'Ionescu', 'Ion', 'Director')
+  *
+ERROR at line 2:
+ORA-00933: SQL command not properly ended 
+
+
+SQL>   VALUES(1001, 'Ionescu', 'Ion', 'Director');
+SP2-0734: unknown command beginning "VALUES(100..." - rest of line ignored.
+SQL> INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, 'Ionescu', 'Ion', 'Director' );
+INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, 'Ionescu', 'Ion', 'Director' )
+                                                                *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie) VALUES(2005, 'Ionescu', 'Ionel', 'Programator');
+
+1 row created.
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu,
+  2  
+SQL> id_departament )
+SP2-0734: unknown command beginning "id_departa..." - rest of line ignored.
+SQL> 
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, `Ionescu', `Ionel', `Programator', 1001, 1024, 10);
+ERROR:
+ORA-01756: quoted string not properly terminated 
+
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescu', 'Ionel', 'Programator', 1001, 1024, 10);
+INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescu', 'Ionel', 'Programator', 1001, 1024, 10)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.UQ_NUME) violated 
+
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescul', 'Ionel', 'Programator', 1001, 1024, 10);
+INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescul', 'Ionel', 'Programator', 1001, 1024, 10)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SCOTT.FK_ANG__ANG) violated - parent key not 
+found 
+
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescul', 'Ionel1', 'Programator', 1001, 1024, 10);
+INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescul', 'Ionel1', 'Programator', 1001, 1024, 10)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SCOTT.FK_ANG__ANG) violated - parent key not 
+found 
+
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescu', 'Ionel1', 'Programator', 1001, 1024, 10);
+INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescu', 'Ionel1', 'Programator', 1001, 1024, 10)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SCOTT.FK_ANG__ANG) violated - parent key not 
+found 
+
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescu', 'Ionel1', 'Programator', 1001, 1024, 10);
+INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescu', 'Ionel1', 'Programator', 1001, 1024, 10)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SCOTT.FK_ANG__ANG) violated - parent key not 
+found 
+
+
+SQL> INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, 'Ionescu', 'Ion', 'Director');
+INSERT INTO angajati VALUES(id_angajat, nume, prenume, functie) VALUES(1001, 'Ionescu', 'Ion', 'Director')
+                                                                *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie) VALUES(1001, 'Ionescu', 'Ion', 'Director');
+
+1 row created.
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescu', 'Ionel', 'Programator', 1001, 1024, 10);
+INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescu', 'Ionel', 'Programator', 1001, 1024, 10)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.UQ_NUME) violated 
+
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament ) VALUES(1002, 'Ionescu', 'Ionel1', 'Programator', 1001, 1024, 10);
+
+1 row created.
+
+SQL> select * from angajati
+  2  
+SQL> select * from angajati;
+
+ID_ANGAJAT NUME                           PRENUME                               
+---------- ------------------------------ ------------------------------        
+FUNCTIE                  ID_SEF DATA_ANGA    SALARIU   COMISION ID_DEPARTAMENT  
+-------------------- ---------- --------- ---------- ---------- --------------  
+      2005 Ionescu                        Ionel                                 
+Programator                     11-MAR-21       2000                            
+                                                                                
+      1001 Ionescu                        Ion                                   
+Director                        11-MAR-21       2000                            
+                                                                                
+      1002 Ionescu                        Ionel1                                
+Programator                1001 11-MAR-21       1024                        10  
+                                                                                
+
+SQL> column nume format a20
+SQL> column prenume format a20
+SQL> column functie format a20
+SQL> column salariu format 9999.99
+SQL> SELECT nume, prenume, fucntie, salariu FROM angajati;
+SELECT nume, prenume, fucntie, salariu FROM angajati
+                      *
+ERROR at line 1:
+ORA-00904: "FUCNTIE": invalid identifier 
+
+
+SQL> SELECT nume, prenume, functie, salariu FROM angajati;
+
+NUME                 PRENUME              FUNCTIE               SALARIU         
+-------------------- -------------------- -------------------- --------         
+Ionescu              Ionel                Programator           2000.00         
+Ionescu              Ion                  Director              2000.00         
+Ionescu              Ionel1               Programator           1024.00         
+
+SQL> select nume, prenume, functie, salariu FROM ANGAJATI WHERE functie = 'Director';
+
+NUME                 PRENUME              FUNCTIE               SALARIU         
+-------------------- -------------------- -------------------- --------         
+Ionescu              Ion                  Director              2000.00         
+
+SQL> select nume from angajati where id_angajat = 1002;
+
+NUME                                                                            
+--------------------                                                            
+Ionescu                                                                         
+
+SQL> update angajati set nume = 'Popescu' wjere id_angajat = 1002;
+update angajati set nume = 'Popescu' wjere id_angajat = 1002
+                                     *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> update angajati set nume = 'Popescu' where id_angajat = 1002;
+
+1 row updated.
+
+SQL> select nume from angaajti where id_angajat = 1002;
+select nume from angaajti where id_angajat = 1002
+                 *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> select nume from angajati where id_angajat = 1002;
+
+NUME                                                                            
+--------------------                                                            
+Popescu                                                                         
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, id_departament, data_angajarii) VALUES (4003, 'Pop', 'Alina', 'Analist', 1001, 20, '21-NOV-1995');
+
+1 row created.
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, id_departament, data_angajarii) VALUES (4004, 'Pop', 'Calin', 'Tester', 1001, 20, '01-JAN-1980');
+
+1 row created.
+
+SQL> INSERT INTO angajati(id_angajat, nume, prenume, functie, id_sef, id_departament, data_angajarii) VALUES (4005, 'Pop', 'Andrei', 'Manager', 1001, 20, '14-FEB-1995');
+
+1 row created.
+
+SQL> select nume, prenume, data_angajarii, comision from angajati;
+
+NUME                 PRENUME              DATA_ANGA   COMISION                  
+-------------------- -------------------- --------- ----------                  
+Ionescu              Ionel                11-MAR-21                             
+Ionescu              Ion                  11-MAR-21                             
+Popescu              Ionel1               11-MAR-21                             
+Pop                  Alina                21-NOV-95                             
+Pop                  Calin                01-JAN-80                             
+Pop                  Andrei               14-FEB-95                             
+
+6 rows selected.
+
+SQL> delete from angajati where nume = 'Pop' and prenume = 'Alina';
+
+1 row deleted.
+
+SQL> select nume, prenume, data_angajarii, comision from angajati;
+
+NUME                 PRENUME              DATA_ANGA   COMISION                  
+-------------------- -------------------- --------- ----------                  
+Ionescu              Ionel                11-MAR-21                             
+Ionescu              Ion                  11-MAR-21                             
+Popescu              Ionel1               11-MAR-21                             
+Pop                  Calin                01-JAN-80                             
+Pop                  Andrei               14-FEB-95                             
+
+SQL> delete from angajati where data_angajarii < '01-JAN-1985';
+
+1 row deleted.
+
+SQL> CREATE TABLE recipes
+  2  (
+  3  id_recipe NUMBER,
+  4  title VARCHAR2(20),
+  5  instructions VARCHAR2(20),
+  6  CONSTRAINT pk_recipes__ PRIMARY KEY (id_recipe),
+  7  CONSTRAINT uq_recipe UNIQUE (id_recipe, title, instructions)
+  8  );
+
+Table created.
+
+SQL> CREATE TABLE ingredients
+  2  (
+  3  id_ingredient NUMBER,
+  4  id_category NUMBER,
+  5  ingredient VARCHAR2(20),
+  6  CONSTRAINT uq_ingredients UNIQUE(id_ingredient, id_category, ingredient),
+  7  CONSTRAINT pk_ingredients PRIMARY KEY(id_ingredient),
+  8  CONSTRAINT fg_ingredients FOREIGN KEY(id_category) REFERENCES categories(id_category)
+  9  );
+CONSTRAINT fg_ingredients FOREIGN KEY(id_category) REFERENCES categories(id_category)
+                                                              *
+ERROR at line 8:
+ORA-00942: table or view does not exist 
+
+
+SQL> CREATE TABLE categories
+  2  (
+  3  id_category NUMBER,
+  4  category VARCHAR2(20),
+  5  CONSTRAINT pk_categories PRIMARY KEY(id_category)
+  6  );
+
+Table created.
+
+SQL> CREATE TABLE ingredients
+  2  (
+  3  id_ingredient NUMBER,
+  4  id_category NUMBER,
+  5  ingredient VARCHAR2(20),
+  6  CONSTRAINT uq_ingredients UNIQUE(id_ingredient, id_category, ingredient),
+  7  CONSTRAINT pk_ingredients PRIMARY KEY(id_ingredient),
+  8  CONSTRAINT fg_ingredients FOREIGN KEY(id_category) REFERENCES categories(id_category)
+  9  );
+
+Table created.
+
+SQL> CREATE TABLE link
+  2  (
+  3  id_recipe NUMBER,
+  4  id_ingredient NUMBER,
+  5  qunatity NUMBER,
+  6  mu VARCHAR2(20).
+  7  CONSTRAINT uq_link UNIQUE(id_recipe),
+  8  CONSTRAINT pk_link PRIMARY Key (id_recipe, id_ingredient),
+  9  CONSTRAINT fk_link FOREIGN KEY(id_recipe) REFERENCES recipes(id_recipe),
+ 10  CONSTRAINT fk_link_2 FOREIGN KEY(id_ingredient) REFERENCES ingredients(id_ingredient)
+ 11  );
+mu VARCHAR2(20).
+               *
+ERROR at line 6:
+ORA-00907: missing right parenthesis 
+
+
+SQL> CREATE TABLE link
+  2  (
+  3  id_recipe NUMBER,
+  4  id_ingredient NUMBER,
+  5  qunatity NUMBER,
+  6  mu VARCHAR2(20),
+  7  CONSTRAINT uq_link UNIQUE(id_recipe),
+  8  CONSTRAINT pk_link PRIMARY Key (id_recipe, id_ingredient),
+  9  CONSTRAINT fk_link FOREIGN KEY(id_recipe) REFERENCES recipes(id_recipe),
+ 10  CONSTRAINT fk_link_2 FOREIGN KEY(id_ingredient) REFERENCES ingredients(id_ingredient)
+ 11  );
+
+Table created.
+
+SQL> CREATE TABLE comments
+  2  (
+  3      id NUMBER(4),
+  4      article_comment VARCHAR2(20),
+  5      idarticle NUMBER(4),
+  6      iduser NUMBER(4),
+  7      CONSTRAINT pk_com PRIMARY KEY (id),
+  8      CONSTRAINT fk_artcom FOREIGN KEY (idarticle) REFERENCES articles(id),
+  9      CONSTRAINT fk_user FOREIGN KEY (iduser) REFERENCES users(id)
+ 10  );
+    CONSTRAINT fk_artcom FOREIGN KEY (idarticle) REFERENCES articles(id),
+                                                            *
+ERROR at line 8:
+ORA-00942: table or view does not exist 
+
+
+SQL> CREATE TABLE tags_articles
+  2  (
+  3      idarticle NUMBER(4),
+  4      idtag NUMBER(4),
+  5      CONSTRAINT pk_ctagsart PRIMARY KEY (idarticle,idtag),
+  6      CONSTRAINT fk_tags FOREIGN KEY (idtag) REFERENCES tags(id),
+  7      CONSTRAINT fk_articles FOREIGN KEY (idarticle) REFERENCES articles(id)
+  8  );
+    CONSTRAINT fk_tags FOREIGN KEY (idtag) REFERENCES tags(id),
+                                                      *
+ERROR at line 6:
+ORA-00942: table or view does not exist 
+
+
+SQL> CREATE TABLE tags
+  2  (
+  3      id NUMBER(4),
+  4      tagname VARCHAR2(20),
+  5      CONSTRAINT pk_tags PRIMARY KEY (id)
+  6  );
+
+Table created.
+
+SQL> CREATE TABLE tags_articles
+  2  (
+  3      idarticle NUMBER(4),
+  4      idtag NUMBER(4),
+  5      CONSTRAINT pk_ctagsart PRIMARY KEY (idarticle,idtag),
+  6      CONSTRAINT fk_tags FOREIGN KEY (idtag) REFERENCES tags(id),
+  7      CONSTRAINT fk_articles FOREIGN KEY (idarticle) REFERENCES articles(id)
+  8  );
+    CONSTRAINT fk_articles FOREIGN KEY (idarticle) REFERENCES articles(id)
+                                                              *
+ERROR at line 7:
+ORA-00942: table or view does not exist 
+
+
+SQL> CREATE TABLE articles
+  2  (
+  3      id NUMBER(4),
+  4      iduser NUMBER(4),
+  5      title VARCHAR2(20),
+  6      content VARCHAR2(20),
+  7      CONSTRAINT pk_articles PRIMARY KEY (id)
+  8  );
+
+Table created.
+
+SQL> CREATE TABLE users
+  2  (
+  3      id NUMBER(4),
+  4      username VARCHAR2(20),
+  5      password VARCHAR2(20),
+  6      CONSTRAINT pk_users PRIMARY KEY (id)
+  7  );
+
+Table created.
+
+SQL> CREATE TABLE tags_articles
+  2  (
+  3      idarticle NUMBER(4),
+  4      idtag NUMBER(4),
+  5      CONSTRAINT pk_ctagsart PRIMARY KEY (idarticle,idtag),
+  6      CONSTRAINT fk_tags FOREIGN KEY (idtag) REFERENCES tags(id),
+  7      CONSTRAINT fk_articles FOREIGN KEY (idarticle) REFERENCES articles(id)
+  8  );
+
+Table created.
+
+SQL> CREATE TABLE comments
+  2  (
+  3      id NUMBER(4),
+  4      article_comment VARCHAR2(20),
+  5      idarticle NUMBER(4),
+  6      iduser NUMBER(4),
+  7      CONSTRAINT pk_com PRIMARY KEY (id),
+  8      CONSTRAINT fk_artcom FOREIGN KEY (idarticle) REFERENCES articles(id),
+  9      CONSTRAINT fk_user FOREIGN KEY (iduser) REFERENCES users(id)
+ 10  );
+
+Table created.
+
+SQL> spool off

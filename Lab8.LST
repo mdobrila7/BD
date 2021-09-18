@@ -1,0 +1,256 @@
+SQL> select * from (select ename,
+  2   sal from emp
+  3  order by sal )
+  4  where rownum <= 3;
+
+ENAME             SAL                                                           
+---------- ----------                                                           
+SMITH             800                                                           
+JAMES             950                                                           
+ADAMS            1100                                                           
+
+SQL> select ename, sal
+  2  from emp
+  3  order by sal
+  4  fetch next 3 rows only;
+
+ENAME             SAL                                                           
+---------- ----------                                                           
+SMITH             800                                                           
+JAMES             950                                                           
+ADAMS            1100                                                           
+
+SQL> select id_dep, nume, functie, salariu
+  2   from angajati
+  3   where salariu = (select max(salariu)
+  4   from angajati);
+
+    ID_DEP NUME       FUNCTIE      SALARIU                                      
+---------- ---------- --------- ----------                                      
+        10 KING       PRESIDENT       5000                                      
+
+SQL> select id_dep, nume, functie, salariu
+  2  from angajati
+  3   where
+  4   not id_dep = 20 and
+  5   functie in (select functie
+  6   from angajati where id_dep = 20)
+  7   order by functie;
+
+    ID_DEP NUME       FUNCTIE      SALARIU                                      
+---------- ---------- --------- ----------                                      
+        30 JAMES      CLERK            950                                      
+        10 MILLER     CLERK           1300                                      
+        30 BLAKE      MANAGER         2850                                      
+        10 CLARK      MANAGER         2450                                      
+
+SQL> select nume, functie, data_ang
+  2   from angajati
+  3   where data_ang not in
+  4   (
+  5   select distinct (data_ang)
+  6   from angajati
+  7   where to_char(data_ang, 'MON')
+  8   in ('DEC', 'JAN', 'FEB')
+  9   )
+ 10   order by nume;
+
+NUME       FUNCTIE   DATA_ANG                                                   
+---------- --------- ---------                                                  
+BLAKE      MANAGER   01-MAY-81                                                  
+CLARK      MANAGER   09-JUN-81                                                  
+JONES      MANAGER   02-APR-81                                                  
+KING       PRESIDENT 17-NOV-81                                                  
+MARTIN     SALESMAN  28-SEP-81                                                  
+TURNER     SALESMAN  08-SEP-81                                                  
+
+6 rows selected.
+
+SQL> select id_dep, den_dep, nume, salariu
+  2   from angajati
+  3   natural join departamente
+  4   where salariu in
+  5   (
+  6   select max(salariu)
+  7   from angajati
+  8   group by id_dep
+  9   )
+ 10   order by den_dep;
+
+    ID_DEP DEN_DEP        NUME          SALARIU                                 
+---------- -------------- ---------- ----------                                 
+        10 ACCOUNTING     KING             5000                                 
+        20 RESEARCH       SCOTT            3000                                 
+        20 RESEARCH       FORD             3000                                 
+        30 SALES          BLAKE            2850                                 
+
+SQL> select id_dep, nume, functie, data_ang
+  2   from angajati
+  3   where
+  4   (to_char(data_ang, 'YYYY'), functie) in
+  5   (
+  6   select to_char(data_ang, 'YYYY'), functie
+  7   from angajati
+  8   where lower(nume) = 'jones'
+  9   );
+
+    ID_DEP NUME       FUNCTIE   DATA_ANG                                        
+---------- ---------- --------- ---------                                       
+        20 JONES      MANAGER   02-APR-81                                       
+        30 BLAKE      MANAGER   01-MAY-81                                       
+        10 CLARK      MANAGER   09-JUN-81                                       
+
+SQL> select id_dep, nume, salariu
+  2   from angajati
+  3   where (id_dep, salariu + nvl(comision, 0)) in
+  4   (select id_dep, min(salariu + nvl(comision, 0))
+  5   from angajati
+  6   group by id_dep)
+  7   order by id_dep;
+
+    ID_DEP NUME          SALARIU                                                
+---------- ---------- ----------                                                
+        10 MILLER           1300                                                
+        20 SMITH             800                                                
+        30 JAMES             950                                                
+
+SQL> select nume, functie, data_ang, salariu
+  2   from angajati
+  3   where salariu >
+  4   (select max(salariu)
+  5   from angajati
+  6   where id_dep =
+  7   (select id_dep
+  8   from departamente
+  9   where lower(den_dep) = 'sales'));
+
+NUME       FUNCTIE   DATA_ANG     SALARIU                                       
+---------- --------- --------- ----------                                       
+JONES      MANAGER   02-APR-81       2975                                       
+SCOTT      ANALYST   09-DEC-82       3000                                       
+KING       PRESIDENT 17-NOV-81       5000                                       
+FORD       ANALYST   03-DEC-81       3000                                       
+
+SQL> select
+  2   a.id_dep,
+  3   a.nume,
+  4   a.functie,
+  5   a.salariu
+  6   from
+  7   angajati a
+  8   where
+  9   a.salariu > (select avg(b.salariu)
+ 10   from angajati b
+ 11   where b.id_dep = a.id_dep)
+ 12   order by a.id_dep;
+
+    ID_DEP NUME       FUNCTIE      SALARIU                                      
+---------- ---------- --------- ----------                                      
+        10 KING       PRESIDENT       5000                                      
+        20 JONES      MANAGER         2975                                      
+        20 FORD       ANALYST         3000                                      
+        20 SCOTT      ANALYST         3000                                      
+        30 ALLEN      SALESMAN        1600                                      
+        30 BLAKE      MANAGER         2850                                      
+
+6 rows selected.
+
+SQL> select
+  2   b.id_dep,
+  3   a.den_dep,
+  4   b.max_sal_dep
+  5   from
+  6   departamente a,
+  7   (select id_dep, max(salariu) max_sal_dep
+  8   from angajati
+  9   group by id_dep) b
+ 10   where a.id_dep = b.id_dep
+ 11   order by b.id_dep;
+
+    ID_DEP DEN_DEP        MAX_SAL_DEP                                           
+---------- -------------- -----------                                           
+        10 ACCOUNTING            5000                                           
+        20 RESEARCH              3000                                           
+        30 SALES                 2850                                           
+
+SQL> SELECTa.nume,d.den_dep,a.salariuFROMangajati aINNER JOIN departamente d ON a.id_dep = d.id_depWHEREa.salariu = (SELECT MIN(b.salariu) FROM angajati bWHERE b.id_dep = a.id_dep)ORDER BY a.nume;
+SP2-0734: unknown command beginning "SELECTa.nu..." - rest of line ignored.
+SQL> SELECT
+  2  a.nume,
+  3  d.den_dep,
+  4  a.salariu
+  5  FROM
+  6  angajati a
+  7  INNER JOIN departamente d ON a.id_dep = d.id_dep
+  8  WHERE
+  9  a.salariu = (SELECT MIN(b.salariu)
+ 10  FROM angajati b
+ 11  WHERE b.id_dep = a.id_dep)
+ 12  ORDER BY a.nume;
+
+NUME       DEN_DEP           SALARIU                                            
+---------- -------------- ----------                                            
+JAMES      SALES                 950                                            
+MILLER     ACCOUNTING           1300                                            
+SMITH      RESEARCH              800                                            
+
+SQL> SELECT
+  2  a.nume,
+  3  d.den_dep,
+  4  a.salariu
+  5  FROM
+  6  angajati a
+  7  INNER JOIN departamente d ON a.id_dep = d.id_dep
+  8  WHERE
+  9  (a.id_dep, a.salariu) IN (SELECT b.id_dep, MIN(b.salariu)
+ 10  FROM angajati b
+ 11  WHERE b.id_dep = a.id_dep
+ 12  GROUP BY b.id_dep)
+ 13  ORDER BY a.nume;
+
+NUME       DEN_DEP           SALARIU                                            
+---------- -------------- ----------                                            
+JAMES      SALES                 950                                            
+MILLER     ACCOUNTING           1300                                            
+SMITH      RESEARCH              800                                            
+
+SQL> SELECT
+  2  a.nume,
+  3  d.den_dep,
+  4  a.salariu
+  5  FROM
+  6  angajati a
+  7  INNER JOIN departamente d ON a.id_dep = d.id_dep
+  8  WHERE
+  9  (a.id_dep, a.salariu) IN (SELECT id_dep, MIN(salariu)
+ 10  FROM angajati
+ 11  GROUP BY id_dep)
+ 12  ORDER BY a.nume;
+
+NUME       DEN_DEP           SALARIU                                            
+---------- -------------- ----------                                            
+JAMES      SALES                 950                                            
+MILLER     ACCOUNTING           1300                                            
+SMITH      RESEARCH              800                                            
+
+SQL> SELECT
+  2  a.nume,
+  3  d.den_dep,
+  4  a.salariu
+  5  FROM
+  6  (SELECT id_dep, MIN(salariu) min_salariu
+  7  FROM angajati
+  8  GROUP BY id_dep) b,
+  9  angajati a
+ 10  INNER JOIN departamente d ON a.id_dep = d.id_dep
+ 11  WHERE
+ 12  a.id_dep = b.id_dep AND a.salariu = b.min_salariu
+ 13  ORDER BY a.nume;
+
+NUME       DEN_DEP           SALARIU                                            
+---------- -------------- ----------                                            
+JAMES      SALES                 950                                            
+MILLER     ACCOUNTING           1300                                            
+SMITH      RESEARCH              800                                            
+
+SQL> spool off

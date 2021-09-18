@@ -1,0 +1,467 @@
+SQL> create table studenti (
+  2      facultate char(30) default 'Automatica si Calculatoare',
+  3      catedra char(20),
+  4      cnp number(13),
+  5      nume varchar2(30),
+  6      data_nasterii date,
+  7      an_univ number(4) default 2019,
+  8      medie_admitere number(4,2),
+  9      discip_oblig varchar2(20) default 'Matematica',
+ 10      discip_opy varchar(20) default 'Fizica',
+ 11      operator varchar(20) default user,
+ 12      data_op timestamp default sysdate
+ 13  );
+
+Table created.
+
+SQL> create table dept_20 as
+  2  select id_dep, nume, data_ang,
+  3      salariu + nvl(comision, 0) venit
+  4  from angajati
+  5  where id_dep = 20;
+
+Table created.
+
+SQL> create table dept_30 (
+  2      id default 30,
+  3      nume not null,
+  4      data_ang,
+  5      prima
+  6  ) as
+  7  select id_dep, nume, data_ang,
+  8      round(0.15 * (salariu + nvl(comision, 0)), 0)
+  9  from angajati
+ 10  where id_dep = 30;
+
+Table created.
+
+SQL> create table exemplu2 (
+  2      col1 number(2) constraint nn_col1 not null,
+  3      col2 varchar2(20) NOT NULL
+  4  );
+
+Table created.
+
+SQL> create table exemplu3 (
+  2      col1 number(2) constraint uq_col1 unique,
+  3      col2 varchar2(20) unique
+  4  );
+
+Table created.
+
+SQL> create table exemplu4 (
+  2      col1 number(2),
+  3      col2 varchar2(20),
+  4      constraint uq_col1_a unique(col1),
+  5      unique(col2)
+  6  );
+
+Table created.
+
+SQL> create table exemplu5 (
+  2      col1 number(2),
+  3      col2 varchar2(20),
+  4      constraint uq_col2 unique(col1, col2)
+  5  );
+
+Table created.
+
+SQL> create table functii (
+  2      cod number(2) constraint pk_cod primary key,
+  3      functie varchar2(20),
+  4      data_vigoare date default sysdate
+  5  );
+
+Table created.
+
+SQL> create table persoane (
+  2      nume varchar2(20),
+  3      prenume varchar2(20),
+  4      serie_ci varchar2(2),
+  5      cod_ci number(6),
+  6      cnp number(13),
+  7      constraint pk_persoane primary key(serie_ci, cod_ci, cnp)
+  8  );
+
+Table created.
+
+SQL> create table angajati2 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang2
+  4          primary key,
+  5      id_sef number(4),
+  6      id_dep number(2)
+  7          constraint fk_id_dep2
+  8          references functii(cod),
+  9      nume varchar2(20),
+ 10      functie varchar2(9),
+ 11      data_ang date,
+ 12      salariu number(7,2),
+ 13      comision number(7,2),
+ 14      constraint fk_id_sef2
+ 15          foreign key(id_sef)
+ 16          references angajati2(id_ang)
+ 17  );
+
+Table created.
+
+SQL> create table angajati3 (
+  2      id_ang number(4) constraint pk_id_ang3 primary key,
+  3      nume varchar(10) constraint ck_nume check(nume=upper(nume)),
+  4      functie varchar2(10),
+  5      id_sef number(4) constraint fk_id_def3 references angajati3(id_ang),
+  6      data_ang date default sysdate,
+  7      salariu number(7,2) constraint nn_id_dep3 not null,
+  8      comision number(7,2),
+  9      id_dep number(2) constraint nn_id_dep3 not null,
+ 10      constraint fk_id_dep3 foreign key (id_dep)
+ 11          references departamente(id_dep),
+ 12      constraint ck_comision check(comision <= salariu)
+ 13  );
+    id_dep number(2) constraint nn_id_dep3 not null,
+                                *
+ERROR at line 9:
+ORA-02264: name already used by an existing constraint 
+
+
+SQL> create table angajati3 (
+  2      id_ang number(4) constraint pk_id_ang3 primary key,
+  3      nume varchar(10) constraint ck_nume check(nume=upper(nume)),
+  4      functie varchar2(10),
+  5      id_sef number(4) constraint fk_id_def3 references angajati3(id_ang),
+  6      data_ang date default sysdate,
+  7      salariu number(7,2) constraint nn_id_dep3 not null,
+  8      comision number(7,2),
+  9      id_dep number(2) constraint mm_id_dep3 not null,
+ 10      constraint fk_id_dep3 foreign key (id_dep)
+ 11          references departamente(id_dep),
+ 12      constraint ck_comision check(comision <= salariu)
+ 13  );
+
+Table created.
+
+SQL> CREATE TABLE book_types
+  2  (
+  3  id_type NUMBER(2) NOT NULL,
+  4  name VARCHAR2(30),
+  5  CONSTRAINT pk_book_types PRIMARY KEY (id_type),
+  6  CONSTRAINT uq_book_types UNIQUE (name)
+  7  );
+
+Table created.
+
+SQL> CREATE TABLE authors
+  2  (
+  3  id_author NUMBER(2) NOT NULL,
+  4  firstname VARCHAR2(30),
+  5  lastname VARCHAR2(30),
+  6  CONSTRAINT pk_authors PRIMARY KEY (id_authors)
+  7  );
+CONSTRAINT pk_authors PRIMARY KEY (id_authors)
+                                   *
+ERROR at line 6:
+ORA-00904: "ID_AUTHORS": invalid identifier 
+
+
+SQL> CREATE TABLE books_authors
+  2  (
+  3  id_book NUMBER(2) NOT NULL,
+  4  id_author NUMBER(2) NOT NULL,
+  5  CONSTRAINT pk_books_authors PRIMARY KEY (id_book, id_author),
+  6  CONSTRAINT fk_ba__books FOREIGN KEY (id_book)
+  7   REFERENCES books(id_book),
+  8  CONSTRAINT fk_ba__auth FOREIGN KEY (id_author)
+  9   REFERENCES authors(id_author)
+ 10  );
+ REFERENCES books(id_book),
+            *
+ERROR at line 7:
+ORA-00942: table or view does not exist 
+
+
+SQL> CREATE TABLE books
+  2  (
+  3  id_book NUMBER(2) NOT NULL,
+  4  id_type NUMBER(2) NOT NULL,
+  5  id_publisher NUMBER(2) NOT NULL,
+  6  title VARCHAR2(30),
+  7  no_pages NUMBER(2),
+  8  publishing_year NUMBER(2),
+  9  CONSTRAINT pk_books PRIMARY KEY (id_book),
+ 10  CONSTRAINT fk_books__bt FOREIGN KEY (id_type)
+ 11   REFERENCES book_types(id_type),
+ 12  CONSTRAINT fk_books__pubs FOREIGN KEY (id_publisher)
+ 13   REFERENCES publishers(id_publisher)
+ 14  );
+ REFERENCES publishers(id_publisher)
+            *
+ERROR at line 13:
+ORA-00942: table or view does not exist 
+
+
+SQL> CREATE TABLE publishers
+  2  (
+  3  id_publisher NUMBER(2) NOT NULL,
+  4  name VARCHAR2(30),
+  5  CONSTRAINT pk_publishers PRIMARY KEY (id_publishers),
+  6  CONSTRAINT uq_publishers UNIQUE (name)
+  7  );
+CONSTRAINT pk_publishers PRIMARY KEY (id_publishers),
+                                      *
+ERROR at line 5:
+ORA-00904: "ID_PUBLISHERS": invalid identifier 
+
+
+SQL> create table book_types (
+  2      id_type number(3),
+  3      type varchar2(10),
+  4      constraint pk_type primary key(id_type)
+  5  );
+create table book_types (
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> create table publishers (
+  2      id_publisher number(3),
+  3      name varchar2(20),
+  4      constraint pk_id_pub primary key(id_publisher)
+  5  );
+
+Table created.
+
+SQL> 
+SQL> create table authors (
+  2      id_authors number(3),
+  3      firstname varchar2(20),
+  4      lastname varchar2(15),
+  5      constraint pk_id_auth primary key(id_authors)
+  6  );
+
+Table created.
+
+SQL> 
+SQL> create table books (
+  2      id_book number(3),
+  3      id_type number(3),
+  4      id_publisher number(3),
+  5      title varchar2(15),
+  6      no_pages number(3),
+  7      publishing_year number(4),
+  8      constraint pk_book primary key(id_book),
+  9      constraint fk_type
+ 10          foreign key(id_type)
+ 11          references book_types(id_type),
+ 12      constraint fk_pub
+ 13          foreign key(id_publisher)
+ 14          references publishers(id_publisher)
+ 15  );
+
+Table created.
+
+SQL> 
+SQL> create table books_authors(
+  2      id_book number(3),
+  3      id_author number(3),
+  4      constraint pk_id_book primary key(id_book, id_author),
+  5      constraint fk_id_book
+  6          foreign key(id_book)
+  7          references books(id_book),
+  8      constraint fk_id_auth
+  9          foreign key(id_author)
+ 10          references authors(id_authors)
+ 11  );
+
+Table created.
+
+SQL> select * from book_authors
+  2  
+SQL> select * from book_authors;
+select * from book_authors
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> create table book_types (    id_type number(3),    type varchar2(10),    constraint pk_type primary key(id_type));create table publishers (    id_publisher number(3),    name varchar2(20),    constraint pk_id_pub primary key(id_publisher));create table authors (    id_authors number(3),    firstname varchar2(20),    lastname varchar2(15),    constraint pk_id_auth primary key(id_authors));create table books (    id_book number(3),    id_type number(3),    id_publisher number(3),    title varchar2(15),    no_pages number(3),    publishing_year number(4),    constraint pk_book primary key(id_book),    constraint fk_type        foreign key(id_type)        references book_types(id_type),    constraint fk_pub        foreign key(id_publisher)        references publishers(id_publisher));create table books_authors(    id_book number(3),    id_author number(3),    constraint pk_id_book primary key(id_book, id_author),    constraint fk_id_book        foreign key(id_book)        references books(id_book),    constraint fk_id_auth        foreign key(id_author)        references authors(id_authors));
+create table book_types (    id_type number(3),    type varchar2(10),    constraint pk_type primary key(id_type));create table publishers (    id_publisher number(3),    name varchar2(20),    constraint pk_id_pub primary key(id_publisher));create table authors (    id_authors number(3),    firstname varchar2(20),    lastname varchar2(15),    constraint pk_id_auth primary key(id_authors));create table books (    id_book number(3),    id_type number(3),    id_publisher number(3),    title varchar2(15),    no_pages number(3),    publishing_year number(4),    constraint pk_book primary key(id_book),    constraint fk_type        foreign key(id_type)        references book_types(id_type),    constraint fk_pub        foreign key(id_publisher)        references publishers(id_publisher));create table books_authors(    id_book number(3),    id_author number(3),    constraint pk_id_book primary key(id_book, id_author),    constraint fk_id_book        foreign key(id_book)        references books(id_book),    constraint fk_id_auth        foreign key(id_author)        references authors(id_authors))
+                                                                                                                 *
+ERROR at line 1:
+ORA-00922: missing or invalid option 
+
+
+SQL> create table book_types (
+  2      id_type number(3),
+  3      type varchar2(10),
+  4      constraint pk_type primary key(id_type)
+  5  );
+create table book_types (
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> create table publishers (
+  2      id_publisher number(3),
+  3      name varchar2(20),
+  4      constraint pk_id_pub primary key(id_publisher)
+  5  );
+create table publishers (
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> create table authors (
+  2      id_authors number(3),
+  3      firstname varchar2(20),
+  4      lastname varchar2(15),
+  5      constraint pk_id_auth primary key(id_authors)
+  6  );
+create table authors (
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> create table books (
+  2      id_book number(3),
+  3      id_type number(3),
+  4      id_publisher number(3),
+  5      title varchar2(15),
+  6      no_pages number(3),
+  7      publishing_year number(4),
+  8      constraint pk_book primary key(id_book),
+  9      constraint fk_type
+ 10          foreign key(id_type)
+ 11          references book_types(id_type),
+ 12      constraint fk_pub
+ 13          foreign key(id_publisher)
+ 14          references publishers(id_publisher)
+ 15  );
+create table books (
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> create table books_authors(
+  2      id_book number(3),
+  3      id_author number(3),
+  4      constraint pk_id_book primary key(id_book, id_author),
+  5      constraint fk_id_book
+  6          foreign key(id_book)
+  7          references books(id_book),
+  8      constraint fk_id_auth
+  9          foreign key(id_author)
+ 10          references authors(id_authors)
+ 11  );
+create table books_authors(
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> insert into book_types values (3, asd)
+  2  
+SQL> insert into book_types values (3, asd)insert into book_types values(1, 'adagys');
+insert into book_types values (3, asd)insert into book_types values(1, 'adagys')
+                                      *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> insert into publishers values(1, 'gjagd');
+
+1 row created.
+
+SQL> insert into authors values(1, 'Jbvjh', 'vghjsvg');
+
+1 row created.
+
+SQL> insert into books values (1, 1, 1, 'ggyug',
+  2                            400, 1813);
+insert into books values (1, 1, 1, 'ggyug',
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SCOTT.FK_TYPE) violated - parent key not found 
+
+
+SQL> insert into books_authors values (1, 1);
+insert into books_authors values (1, 1)
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SCOTT.FK_ID_BOOK) violated - parent key not 
+found 
+
+
+SQL> insert into book_types values(1, 'adagys');
+
+1 row created.
+
+SQL> insert into publishers values(1, 'gjagd');
+insert into publishers values(1, 'gjagd')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_ID_PUB) violated 
+
+
+SQL> insert into authors values(1, 'Jbvjh', 'vghjsvg');
+insert into authors values(1, 'Jbvjh', 'vghjsvg')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_ID_AUTH) violated 
+
+
+SQL> insert into books values (1, 1, 1, 'ggyug',
+  2                            400, 1813);
+
+1 row created.
+
+SQL> insert into books_authors values (1, 1);
+
+1 row created.
+
+SQL> insert into book_types values(1, 'adagys');
+insert into book_types values(1, 'adagys')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_BOOK_TYPES) violated 
+
+
+SQL> insert into publishers values(1, 'gjagd');
+insert into publishers values(1, 'gjagd')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_ID_PUB) violated 
+
+
+SQL> insert into authors values(1, 'Jbvjh', 'vghjsvg');
+insert into authors values(1, 'Jbvjh', 'vghjsvg')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_ID_AUTH) violated 
+
+
+SQL> insert into books values (1, 1, 1, 'ggyug',
+  2                            400, 1813);
+insert into books values (1, 1, 1, 'ggyug',
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_BOOK) violated 
+
+
+SQL> insert into books_authors values (1, 1);
+insert into books_authors values (1, 1)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_ID_BOOK) violated 
+
+
+SQL> spool off;
